@@ -1,11 +1,13 @@
 import { Button, Card, Flex, Form, Input, Space } from 'antd';
 import { FormProps } from 'antd/lib';
+import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../api/authApi';
+import useNotification from '../../hooks/useNotification';
+import usePersist from '../../hooks/usePersist';
 import { setAccessToken } from '../../store/features/authSlice';
 import { useAppDispatch } from '../../store/store';
-import usePersist from '../../hooks/usePersist';
 
 type FieldType = {
 	email: string;
@@ -14,20 +16,36 @@ type FieldType = {
 
 type LoginResponseType = { message: string; access_token: string };
 
+interface MyResponse {
+	errors?: string;
+}
+
 const SignIn = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+	const notification = useNotification();
 	const [persist, setPersist] = usePersist();
 
 	const loginMutation = useMutation(login, {
-		onSuccess: (data: any) => {
-			const responseData: LoginResponseType = data.data;
-			// const decoded = jwtDecode(responseData.access_token);
+		onError: (error: AxiosError<MyResponse>) => {
+			if (error.response?.data.errors) {
+				notification.notificationInstance({
+					type: 'error',
+					message: 'Failed',
+					description: error.response?.data.errors,
+				});
+			} else {
+				notification.notificationInstance({
+					type: 'error',
+					message: 'Failed',
+					description: 'Internal Server Error',
+				});
+			}
+		},
+		onSuccess: (data: AxiosResponse<LoginResponseType>) => {
+			const { access_token } = data.data;
 
-			// console.log('responseData : ', responseData);
-			// console.log('decoded : ', decoded);
-
-			dispatch(setAccessToken({ value: responseData.access_token }));
+			dispatch(setAccessToken({ value: access_token }));
 			navigate('/dashboard', { replace: true });
 		},
 	});
@@ -47,10 +65,15 @@ const SignIn = () => {
 
 	return (
 		<Flex justify="center" align="center" style={{ minHeight: '100vh' }}>
+			{notification.contextHolder}
 			<Card title="Sign In" style={{ minWidth: 400 }}>
 				<Form
 					name="login"
-					initialValues={{ remember: persist, email: 'altiansyah@gmail.com', password: 'password' }}
+					initialValues={{
+						remember: persist,
+						email: 'altiansyah21@gmail.com',
+						password: 'rahasia',
+					}}
 					onFinish={onFinish}
 					onFinishFailed={onFinishFailed}
 					autoComplete="off"

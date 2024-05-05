@@ -8,6 +8,15 @@ type LoginProps = {
 	password: string;
 };
 
+type RegisterRequest = {
+	name: string;
+	email: string;
+	password: string;
+};
+
+export const register = async (request: RegisterRequest) => {
+	return await api.post('/auth/register', request);
+};
 export const login = async (props: LoginProps) => {
 	return await api.post('/auth/login', props);
 };
