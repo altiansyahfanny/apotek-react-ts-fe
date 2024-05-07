@@ -11,6 +11,9 @@ import RequireAuth from './RequiredAuth';
 import Forbidden from './Forbidden';
 import Public from './Public';
 import PersistLogin from './PersistLogin';
+import Verification from '../pages/auth/Verification';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import ResetPassword from '../pages/auth/ResetPassword';
 
 const Router = () => {
 	return (
@@ -19,6 +22,9 @@ const Router = () => {
 				<Route path="/" element={<Welcome />} />
 				<Route path="/sign-in" element={<SignIn />} />
 				<Route path="/sign-up" element={<SignUp />} />
+				<Route path="/verification" element={<Verification />} />
+				<Route path="/forgot-password" element={<ForgotPassword />} />
+				<Route path="/reset-password" element={<ResetPassword />} />
 			</Route>
 			<Route element={<PersistLogin />}>
 				<Route element={<RequireAuth allowedRoles={['Admin']} />}>

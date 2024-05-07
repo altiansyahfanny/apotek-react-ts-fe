@@ -4,54 +4,33 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../api/authApi';
-import useNotification from '../../hooks/useNotification';
+import AuthAlert from '../../components/Page/Auth/AuthAlert';
+import { showAxiosResponseErrorToast } from '../../helpers/Toast';
 import usePersist from '../../hooks/usePersist';
+import { LOGIN_SCHEMA } from '../../schema/auth-schema';
+import validate from '../../schema/validation';
 import { setAccessToken } from '../../store/features/authSlice';
 import { useAppDispatch } from '../../store/store';
-
-type FieldType = {
-	email: string;
-	password: string;
-};
-
-type LoginResponseType = { message: string; access_token: string };
-
-interface MyResponse {
-	errors?: string;
-}
 
 const SignIn = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const notification = useNotification();
 	const [persist, setPersist] = usePersist();
 
 	const loginMutation = useMutation(login, {
-		onError: (error: AxiosError<MyResponse>) => {
-			if (error.response?.data.errors) {
-				notification.notificationInstance({
-					type: 'error',
-					message: 'Failed',
-					description: error.response?.data.errors,
-				});
-			} else {
-				notification.notificationInstance({
-					type: 'error',
-					message: 'Failed',
-					description: 'Internal Server Error',
-				});
-			}
+		onError: (e: AxiosError<ErrorResponse>) => {
+			showAxiosResponseErrorToast(e);
 		},
-		onSuccess: (data: AxiosResponse<LoginResponseType>) => {
+		onSuccess: (data: AxiosResponse<LoginResponse>) => {
 			const { access_token } = data.data;
 
+			setPersist(true);
 			dispatch(setAccessToken({ value: access_token }));
 			navigate('/dashboard', { replace: true });
 		},
 	});
 
-	const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-		setPersist(true);
+	const onFinish: FormProps<LoginRequest>['onFinish'] = (values) => {
 		const payload = {
 			email: values.email,
 			password: values.password,
@@ -59,38 +38,35 @@ const SignIn = () => {
 		loginMutation.mutate(payload);
 	};
 
-	const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-		console.log('Failed:', errorInfo);
-	};
-
 	return (
-		<Flex justify="center" align="center" style={{ minHeight: '100vh' }}>
-			{notification.contextHolder}
+		<Flex justify="center" align="center" vertical gap={8} style={{ minHeight: '100vh' }}>
+			{<AuthAlert />}
 			<Card title="Sign In" style={{ minWidth: 400 }}>
 				<Form
 					name="login"
 					initialValues={{
 						remember: persist,
-						email: 'altiansyah21@gmail.com',
+						email: 'altiansyahfanny21@gmail.co',
 						password: 'rahasia',
 					}}
 					onFinish={onFinish}
-					onFinishFailed={onFinishFailed}
 					autoComplete="off"
 					layout="vertical"
 				>
-					<Form.Item<FieldType>
+					<Form.Item<LoginRequest>
 						label="Email"
 						name="email"
-						rules={[{ required: true, message: 'Please input your email!' }]}
+						rules={[{ validator: (_, value) => validate({ schema: LOGIN_SCHEMA.email, value }) }]}
 					>
 						<Input />
 					</Form.Item>
 
-					<Form.Item<FieldType>
+					<Form.Item<LoginRequest>
 						label="Password"
 						name="password"
-						rules={[{ required: true, message: 'Please input your password!' }]}
+						rules={[
+							{ validator: (_, value) => validate({ schema: LOGIN_SCHEMA.password, value }) },
+						]}
 					>
 						<Input.Password />
 					</Form.Item>
@@ -104,7 +80,7 @@ const SignIn = () => {
 
 				<Flex justify="center">
 					<Space direction="vertical" align="center">
-						<Link to={'/'}>Forgot password</Link>
+						<Link to={'/forgot-password'}>Forgot password</Link>
 						<Link to={'/sign-up'}>Don't have an account? Sign Up</Link>
 					</Space>
 				</Flex>

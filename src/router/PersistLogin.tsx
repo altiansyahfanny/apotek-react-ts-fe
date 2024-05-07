@@ -6,7 +6,7 @@ import { refreshToken } from '../api/authApi';
 import usePersist from '../hooks/usePersist';
 import { setAccessToken } from '../store/features/authSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import ErrorLayout from './ErrorLayout';
+import CenterLayout from './CenterLayout';
 
 type RefreshResponseType = { message: string; access_token: string };
 
@@ -70,20 +70,20 @@ const PersistLogin = () => {
 		// persist: yes, token: no
 		// console.log('loading');
 		content = (
-			<ErrorLayout>
+			<CenterLayout>
 				<Title>Loading...</Title>
-			</ErrorLayout>
+			</CenterLayout>
 		);
 	} else if (isError) {
 		// persist: yes, token: no
 		console.error('error');
 		content = (
-			<ErrorLayout>
+			<CenterLayout>
 				{responseError?.message && <Title>{responseError.message}</Title>}
 				<Title level={5}>
 					<Link to="/sign-in"> Please login again</Link>
 				</Title>
-			</ErrorLayout>
+			</CenterLayout>
 		);
 	} else if (isSuccess && trueSuccess) {
 		// persist: yes, token: yes

@@ -1,11 +1,11 @@
 import { Flex } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-interface ErrorLayoutProps {
+interface CenterLayoutProps {
 	children: React.ReactNode;
 }
 
-const ErrorLayout = ({ children }: ErrorLayoutProps) => {
+const CenterLayout = ({ children }: CenterLayoutProps) => {
 	const [minHeight, setMinHeight] = useState(0);
 
 	useEffect(() => {
@@ -29,4 +29,4 @@ const ErrorLayout = ({ children }: ErrorLayoutProps) => {
 	);
 };
 
-export default ErrorLayout;
+export default CenterLayout;

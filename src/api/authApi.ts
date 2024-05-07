@@ -3,8 +3,13 @@ import api from './api';
 
 // const api = axios.create({ baseURL: 'http://localhost:5000/api/' });
 
-type LoginProps = {
+type LoginRequest = {
 	email: string;
+	password: string;
+};
+
+type ResetPasswordRequest = {
+	token: string;
 	password: string;
 };
 
@@ -17,7 +22,7 @@ type RegisterRequest = {
 export const register = async (request: RegisterRequest) => {
 	return await api.post('/auth/register', request);
 };
-export const login = async (props: LoginProps) => {
+export const login = async (props: LoginRequest) => {
 	return await api.post('/auth/login', props);
 };
 export const logout = async () => {
@@ -25,4 +30,13 @@ export const logout = async () => {
 };
 export const refreshToken = async () => {
 	return await api.get('/auth/refresh-token');
+};
+export const verification = async (token: string | null) => {
+	return await api.get(`/auth/verification?token=${token}`);
+};
+export const forgotPassword = async (request: { email: string }) => {
+	return await api.post(`/auth/forgot-password`, request);
+};
+export const resetPassword = async (request: ResetPasswordRequest) => {
+	return await api.post(`/auth/reset-password`, request);
 };

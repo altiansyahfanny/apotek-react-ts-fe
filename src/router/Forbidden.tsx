@@ -1,11 +1,11 @@
 import Title from 'antd/lib/typography/Title';
-import ErrorLayout from './ErrorLayout';
+import CenterLayout from './CenterLayout';
 
 const Forbidden = () => {
 	return (
-		<ErrorLayout>
+		<CenterLayout>
 			<Title level={2}>Forbidden</Title>
-		</ErrorLayout>
+		</CenterLayout>
 	);
 };
 

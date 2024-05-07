@@ -63,7 +63,7 @@ const SignUp = () => {
 					name="register"
 					initialValues={{
 						remember: true,
-						email: 'altiansyah21@gmail.com',
+						email: 'altiansyahfanny21@gmail.com',
 						password: 'rahasia',
 						name: 'Altiansyah',
 					}}
