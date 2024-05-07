@@ -5,6 +5,10 @@ export const LOGIN_SCHEMA = {
 	password: z.string().min(1),
 };
 
+export const FORGOT_PASSWORD_SCHEMA = {
+	email: z.string().email(),
+};
+
 export const REGISTER_SCHEMA = {
 	name: z.string().min(5),
 	email: z.string().email().min(5),

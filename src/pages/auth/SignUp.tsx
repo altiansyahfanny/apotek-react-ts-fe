@@ -1,63 +1,39 @@
 import { Button, Card, Flex, Form, Input, Space } from 'antd';
 import { FormProps } from 'antd/lib';
-import { useMutation } from 'react-query';
-import { Link, useNavigate } from 'react-router-dom';
-import { register } from '../../api/authApi';
 import { AxiosError } from 'axios';
-import useNotification from '../../hooks/useNotification';
-
-type FieldType = {
-	name: string;
-	email: string;
-	password: string;
-};
-
-interface MyResponse {
-	errors?: string;
-}
+import { useMutation } from 'react-query';
+import { Link } from 'react-router-dom';
+import { register } from '../../api/authApi';
+import SuccessAlert from '../../components/SuccessAlert';
+import { showAxiosResponseErrorToast } from '../../helpers/Toast';
+import CenterLayout from '../../router/CenterLayout';
+import { REGISTER_SCHEMA } from '../../schema/auth-schema';
+import validate from '../../schema/validation';
 
 const SignUp = () => {
-	const navigate = useNavigate();
-	const notification = useNotification();
-
-	const registerMutation = useMutation(register, {
-		onError: (error: AxiosError<MyResponse>) => {
-			console.log('error : ', error);
-			if (error.response?.data.errors) {
-				notification.notificationInstance({
-					type: 'error',
-					message: 'Failed',
-					description: error.response?.data.errors,
-				});
-			} else {
-				notification.notificationInstance({
-					type: 'error',
-					message: 'Failed',
-					description: 'Internal Server Error',
-				});
-			}
-		},
-		onSuccess: (data: any) => {
-			console.log('data : ', data);
-			navigate('/sign-in', { replace: true });
+	const { mutate, isSuccess, isLoading } = useMutation(register, {
+		onError: (e: AxiosError<ErrorResponse>) => {
+			showAxiosResponseErrorToast(e);
 		},
 	});
 
-	const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+	const onFinish: FormProps<RegisterRequest>['onFinish'] = (values) => {
 		const payload = {
 			email: values.email,
 			name: values.name,
 			password: values.password,
 		};
-		registerMutation.mutate(payload);
+		mutate(payload);
 	};
 
-	const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-		console.log('Failed:', errorInfo);
-	};
+	if (isSuccess) {
+		return (
+			<SuccessAlert description="Link verification email was sent to your email. Please verify under 5 minute after you receive the email." />
+		);
+	}
 
 	return (
-		<Flex justify="center" align="center" style={{ minHeight: '100vh' }}>
+		<CenterLayout>
 			<Card title="Sign Up" style={{ minWidth: 400 }}>
 				<Form
 					name="register"
@@ -68,35 +44,38 @@ const SignUp = () => {
 						name: 'Altiansyah',
 					}}
 					onFinish={onFinish}
-					onFinishFailed={onFinishFailed}
 					autoComplete="off"
 					layout="vertical"
 				>
-					<Form.Item<FieldType>
+					<Form.Item<RegisterRequest>
 						label="Name"
 						name="name"
-						rules={[{ required: true, message: 'Please input your name!' }]}
+						rules={[{ validator: (_, value) => validate({ schema: REGISTER_SCHEMA.name, value }) }]}
 					>
 						<Input />
 					</Form.Item>
-					<Form.Item<FieldType>
+					<Form.Item<RegisterRequest>
 						label="Email"
 						name="email"
-						rules={[{ required: true, message: 'Please input your email!' }]}
+						rules={[
+							{ validator: (_, value) => validate({ schema: REGISTER_SCHEMA.email, value }) },
+						]}
 					>
 						<Input />
 					</Form.Item>
 
-					<Form.Item<FieldType>
+					<Form.Item<RegisterRequest>
 						label="Password"
 						name="password"
-						rules={[{ required: true, message: 'Please input your password!' }]}
+						rules={[
+							{ validator: (_, value) => validate({ schema: REGISTER_SCHEMA.password, value }) },
+						]}
 					>
 						<Input.Password />
 					</Form.Item>
 
 					<Form.Item>
-						<Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+						<Button type="primary" htmlType="submit" style={{ width: '100%' }} loading={isLoading}>
 							Sign Up
 						</Button>
 					</Form.Item>
@@ -108,8 +87,7 @@ const SignUp = () => {
 					</Space>
 				</Flex>
 			</Card>
-			{notification.contextHolder}
-		</Flex>
+		</CenterLayout>
 	);
 };
 

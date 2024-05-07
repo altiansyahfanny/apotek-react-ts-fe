@@ -4,12 +4,19 @@ import { BrowserRouter } from 'react-router-dom';
 import Router from './router';
 
 import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
 
 const App: React.FC = () => {
 	return (
 		<BrowserRouter>
 			<Router />
-			<Toaster />
+			<Toaster
+				toastOptions={{
+					style: {
+						fontFamily: 'sans-serif',
+					},
+				}}
+			/>
 		</BrowserRouter>
 	);
 };

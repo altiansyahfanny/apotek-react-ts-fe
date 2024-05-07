@@ -1,59 +1,35 @@
 import { Button, Card, Flex, Form, Input, Space } from 'antd';
 import { FormProps } from 'antd/lib';
+import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { forgotPassword } from '../../api/authApi';
-import useNotification from '../../hooks/useNotification';
+import SuccessAlert from '../../components/SuccessAlert';
+import { showAxiosResponseErrorToast } from '../../helpers/Toast';
 import CenterLayout from '../../router/CenterLayout';
-import { setAlert } from '../../store/features/authSlice';
-import { useAppDispatch } from '../../store/store';
-
-type FieldType = {
-	email: string;
-	password: string;
-};
+import { FORGOT_PASSWORD_SCHEMA } from '../../schema/auth-schema';
+import validate from '../../schema/validation';
 
 const ForgotPassword = () => {
-	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
-	const notification = useNotification();
-
-	const { mutate, isLoading } = useMutation(forgotPassword, {
-		onError() {
-			notification.notificationInstance({
-				type: 'error',
-				message: 'Failed',
-				description: 'Failed to response request',
-			});
-		},
-		onSuccess() {
-			dispatch(
-				setAlert({
-					value: {
-						error: false,
-						message: 'Success',
-						description: 'Email was sent to your email, please check your email.',
-					},
-				})
-			);
-
-			navigate('/sign-in', { replace: true });
+	const { mutate, isLoading, isSuccess } = useMutation(forgotPassword, {
+		onError: (e: AxiosError<ErrorResponse>) => {
+			showAxiosResponseErrorToast(e);
 		},
 	});
 
-	const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-		// console.log('values : ', values);
+	const onFinish: FormProps<ForgotPasswordRequest>['onFinish'] = (values) => {
 		const payload = { email: values.email };
 		mutate(payload);
 	};
 
-	const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-		console.log('Failed:', errorInfo);
-	};
+	if (isSuccess) {
+		return (
+			<SuccessAlert description="Reset password link was sent to your email. Please do reset password under 5 minute after you receive the email." />
+		);
+	}
 
 	return (
 		<CenterLayout>
-			{notification.contextHolder}
 			<Card title="Forgot Password" style={{ minWidth: 400 }}>
 				<Form
 					name="login"
@@ -61,14 +37,17 @@ const ForgotPassword = () => {
 						email: 'altiansyahfanny21@gmail.com',
 					}}
 					onFinish={onFinish}
-					onFinishFailed={onFinishFailed}
 					autoComplete="off"
 					layout="vertical"
 				>
-					<Form.Item<FieldType>
+					<Form.Item<ForgotPasswordRequest>
 						label="Email"
 						name="email"
-						rules={[{ required: true, message: 'Please input your email!' }]}
+						rules={[
+							{
+								validator: (_, value) => validate({ schema: FORGOT_PASSWORD_SCHEMA.email, value }),
+							},
+						]}
 					>
 						<Input />
 					</Form.Item>

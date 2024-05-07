@@ -4,20 +4,20 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../api/authApi';
-import AuthAlert from '../../components/Page/Auth/AuthAlert';
 import { showAxiosResponseErrorToast } from '../../helpers/Toast';
 import usePersist from '../../hooks/usePersist';
 import { LOGIN_SCHEMA } from '../../schema/auth-schema';
 import validate from '../../schema/validation';
 import { setAccessToken } from '../../store/features/authSlice';
 import { useAppDispatch } from '../../store/store';
+import CenterLayout from '../../router/CenterLayout';
 
 const SignIn = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const [persist, setPersist] = usePersist();
 
-	const loginMutation = useMutation(login, {
+	const { mutate, isLoading } = useMutation(login, {
 		onError: (e: AxiosError<ErrorResponse>) => {
 			showAxiosResponseErrorToast(e);
 		},
@@ -35,12 +35,11 @@ const SignIn = () => {
 			email: values.email,
 			password: values.password,
 		};
-		loginMutation.mutate(payload);
+		mutate(payload);
 	};
 
 	return (
-		<Flex justify="center" align="center" vertical gap={8} style={{ minHeight: '100vh' }}>
-			{<AuthAlert />}
+		<CenterLayout>
 			<Card title="Sign In" style={{ minWidth: 400 }}>
 				<Form
 					name="login"
@@ -72,7 +71,7 @@ const SignIn = () => {
 					</Form.Item>
 
 					<Form.Item>
-						<Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+						<Button type="primary" htmlType="submit" style={{ width: '100%' }} loading={isLoading}>
 							Sign In
 						</Button>
 					</Form.Item>
@@ -85,7 +84,7 @@ const SignIn = () => {
 					</Space>
 				</Flex>
 			</Card>
-		</Flex>
+		</CenterLayout>
 	);
 };
 
