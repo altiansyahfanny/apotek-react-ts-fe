@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import CenterLayout from '../../router/CenterLayout';
+import CenterLayout from '../../layouts/CenterLayout';
 import { Button, Card, Flex, Form, Input, Space } from 'antd';
 import { FormProps } from 'antd/lib';
 import { useMutation } from 'react-query';

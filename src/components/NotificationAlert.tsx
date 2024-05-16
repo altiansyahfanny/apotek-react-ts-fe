@@ -1,11 +1,11 @@
 import React from 'react';
-import CenterLayout from '../router/CenterLayout';
+import CenterLayout from '../layouts/CenterLayout';
 import { Alert, AlertProps, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 
 const { Text } = Typography;
 
-interface SuccessAlertProps {
+interface NotificationAlert {
 	type?: AlertProps['type'];
 	message?: string;
 	description: string;
@@ -13,7 +13,7 @@ interface SuccessAlertProps {
 	linkDescription?: string;
 }
 
-const SuccessAlert: React.FC<SuccessAlertProps> = ({
+const NotificationAlert: React.FC<NotificationAlert> = ({
 	type = 'success',
 	message = 'Success',
 	description,
@@ -38,4 +38,4 @@ const SuccessAlert: React.FC<SuccessAlertProps> = ({
 	);
 };
 
-export default SuccessAlert;
+export default NotificationAlert;

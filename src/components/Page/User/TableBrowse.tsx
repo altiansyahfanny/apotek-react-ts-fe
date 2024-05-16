@@ -20,7 +20,7 @@ import {
 	OnSearchProps,
 } from '../../../types/table.type';
 import { UserType } from '../../../types/user.type';
-import TableCustom, { getColumnSearchProps } from '../../Table/TableCustom';
+import TableCustom, { getColumnSearchProps } from '../../table/TableCustom';
 import Update from './Update';
 
 type InputSearchRef = GetRef<typeof Input>;
@@ -146,6 +146,24 @@ const TableBrowse: React.FC = () => {
 				...columnSearchProps,
 			}),
 		},
+		{
+			title: 'Role',
+			...getColumnSearchProps({
+				dataIndex: 'role',
+				componentInputSearch: 'option',
+				options: [
+					{
+						value: 'ADMIN',
+						label: 'ADMIN',
+					},
+					{
+						value: 'USER',
+						label: 'USER',
+					},
+				],
+				...columnSearchProps,
+			}),
+		},
 	];
 
 	const { data, isLoading, refetch } = useQuery(
@@ -155,7 +173,7 @@ const TableBrowse: React.FC = () => {
 		},
 		{
 			onSuccess: (data) => {
-				dispatch(setPaginationState({ value: { total: data.meta.total } }));
+				dispatch(setPaginationState({ value: { total: data.paging.total } }));
 			},
 		}
 	);

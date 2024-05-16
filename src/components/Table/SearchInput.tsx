@@ -21,8 +21,7 @@ const SearchInput = <T extends {}>({
 	componentInputSearch = 'input',
 	options,
 }: SearchInputProps<T>) => {
-	// const searchInput = useRef<InputRef>(null);
-
+	console.log('filter : ', filter);
 	const componentProps = {
 		ref: searchInput,
 		placeholder: `${componentInputSearch === 'option' ? 'Choose' : 'Search'} ${String(dataIndex)}`,

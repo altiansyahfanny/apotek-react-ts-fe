@@ -1,0 +1,3 @@
+type ErrorResponseType = {
+	errors?: string;
+};

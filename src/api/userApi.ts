@@ -28,3 +28,7 @@ export const updateUser = async (id: number, user: UserType) => {
 export const deleteUser = async (id: number) => {
 	return await api.delete(`/user/${id}`);
 };
+
+export const getUserProfile = async () => {
+	return await api.get(`/user/get/profile`);
+};

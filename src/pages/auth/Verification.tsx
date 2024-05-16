@@ -1,8 +1,8 @@
 import Title from 'antd/es/typography/Title';
 import { useQuery } from 'react-query';
 import { verification } from '../../api/authApi';
-import SuccessAlert from '../../components/SuccessAlert';
-import CenterLayout from '../../router/CenterLayout';
+import SuccessAlert from '../../components/NotificationAlert';
+import CenterLayout from '../../layouts/CenterLayout';
 
 const Verification = () => {
 	const urlParams = new URLSearchParams(window.location.search);

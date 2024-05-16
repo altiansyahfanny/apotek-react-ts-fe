@@ -1,6 +1,6 @@
 import Title from 'antd/es/typography/Title';
 import React from 'react';
-import Container from '../components/Core/Container';
+import Container from '../../components/core/Container';
 
 const Dashboard: React.FC = () => {
 	return (

@@ -27,7 +27,7 @@ const Create: React.FC = () => {
 	});
 
 	const onFinish = (value: UserType) => {
-		addUserMutation.mutate(value);
+		addUserMutation.mutate({ ...value, password: 'password' });
 	};
 
 	const handleCloseModal = () => {

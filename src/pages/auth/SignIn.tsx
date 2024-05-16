@@ -10,7 +10,7 @@ import { LOGIN_SCHEMA } from '../../schema/auth-schema';
 import validate from '../../schema/validation';
 import { setAccessToken } from '../../store/features/authSlice';
 import { useAppDispatch } from '../../store/store';
-import CenterLayout from '../../router/CenterLayout';
+import CenterLayout from '../../layouts/CenterLayout';
 
 const SignIn = () => {
 	const navigate = useNavigate();

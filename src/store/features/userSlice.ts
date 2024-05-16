@@ -17,7 +17,7 @@ type UserStateType = {
 };
 
 const initialState: UserStateType = {
-	filterState: { id: '', name: '', email: '' },
+	filterState: { id: '', name: '', email: '', role: '' },
 	paginationState: { page: 1, pageSize: 10, total: 10 },
 	sorterState: { sortColumn: 'id', sortDirection: 'desc' },
 

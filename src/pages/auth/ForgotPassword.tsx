@@ -4,9 +4,9 @@ import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
 import { Link } from 'react-router-dom';
 import { forgotPassword } from '../../api/authApi';
-import SuccessAlert from '../../components/SuccessAlert';
+import NotificationAlert from '../../components/NotificationAlert';
 import { showAxiosResponseErrorToast } from '../../helpers/Toast';
-import CenterLayout from '../../router/CenterLayout';
+import CenterLayout from '../../layouts/CenterLayout';
 import { FORGOT_PASSWORD_SCHEMA } from '../../schema/auth-schema';
 import validate from '../../schema/validation';
 
@@ -24,7 +24,7 @@ const ForgotPassword = () => {
 
 	if (isSuccess) {
 		return (
-			<SuccessAlert description="Reset password link was sent to your email. Please do reset password under 5 minute after you receive the email." />
+			<NotificationAlert description="Reset password link was sent to your email. Please do reset password under 5 minute after you receive the email." />
 		);
 	}
 

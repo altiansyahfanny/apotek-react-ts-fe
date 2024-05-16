@@ -1,7 +1,7 @@
 import { Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/Core/Sidebar';
-import Topbar from '../components/Core/Topbar';
+import Sidebar from '../components/core/Sidebar';
+import Topbar from '../components/core/Topbar';
 import useAuth from '../hooks/useAuth';
 import { useAppSelector } from '../store/store';
 const { Content, Footer } = Layout;

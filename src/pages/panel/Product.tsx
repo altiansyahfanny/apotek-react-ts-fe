@@ -1,17 +1,21 @@
 import type { GetRef, Input, TableProps } from 'antd';
 import { SorterResult } from 'antd/es/table/interface';
 import React, { useRef } from 'react';
-import Container from '../components/Core/Container';
-import TableCustom, { getColumnSearchProps } from '../components/Table/TableCustom';
-import { setFilterState, setPaginationState, setSorterState } from '../store/features/productSlice';
-import { useAppDispatch, useAppSelector } from '../store/store';
-import { DataSourceType, ProductType } from '../types/product.types';
+import Container from '../../components/core/Container';
+import TableCustom, { getColumnSearchProps } from '../../components/table/TableCustom';
+import {
+	setFilterState,
+	setPaginationState,
+	setSorterState,
+} from '../../store/features/productSlice';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import { DataSourceType, ProductType } from '../../types/product.types';
 import {
 	ColumnSearchProps,
 	HandleChangeInputSearchProps,
 	HandleChangePaginationProps,
 	OnSearchProps,
-} from '../types/table.type';
+} from '../../types/table.type';
 
 type InputSearchRef = GetRef<typeof Input>;
 

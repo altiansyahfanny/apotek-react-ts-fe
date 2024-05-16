@@ -1,3 +1,0 @@
-type ErrorResponse = {
-	errors?: string;
-};

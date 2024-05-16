@@ -4,15 +4,15 @@ import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
 import { Link } from 'react-router-dom';
 import { register } from '../../api/authApi';
-import SuccessAlert from '../../components/SuccessAlert';
+import NotificationAlert from '../../components/NotificationAlert';
 import { showAxiosResponseErrorToast } from '../../helpers/Toast';
-import CenterLayout from '../../router/CenterLayout';
+import CenterLayout from '../../layouts/CenterLayout';
 import { REGISTER_SCHEMA } from '../../schema/auth-schema';
 import validate from '../../schema/validation';
 
 const SignUp = () => {
 	const { mutate, isSuccess, isLoading } = useMutation(register, {
-		onError: (e: AxiosError<ErrorResponse>) => {
+		onError: (e: AxiosError<ErrorResponseType>) => {
 			showAxiosResponseErrorToast(e);
 		},
 	});
@@ -28,7 +28,7 @@ const SignUp = () => {
 
 	if (isSuccess) {
 		return (
-			<SuccessAlert description="Link verification email was sent to your email. Please verify under 5 minute after you receive the email." />
+			<NotificationAlert description="Link verification email was sent to your email. Please verify under 5 minute after you receive the email." />
 		);
 	}
 

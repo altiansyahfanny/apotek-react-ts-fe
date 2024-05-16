@@ -1,5 +1,5 @@
 import Title from 'antd/lib/typography/Title';
-import CenterLayout from './CenterLayout';
+import CenterLayout from '../../layouts/CenterLayout';
 
 const Forbidden = () => {
 	return (
