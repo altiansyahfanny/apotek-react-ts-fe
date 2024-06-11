@@ -8,7 +8,13 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+		},
+	},
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>

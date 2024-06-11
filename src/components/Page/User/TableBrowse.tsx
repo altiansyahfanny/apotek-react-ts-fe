@@ -3,9 +3,10 @@ import type { GetRef, TableProps } from 'antd';
 import { Button, Input, Modal, Space, Tooltip } from 'antd';
 import { SorterResult } from 'antd/es/table/interface';
 import React, { useRef, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { deleteUser, getUser } from '../../../api/userApi';
+import { useMutation, useQueryClient } from 'react-query';
+import { deleteUser } from '../../../api/userApi';
 import { transformSorter } from '../../../helpers/TableHelper';
+import { useGetUsersQuery } from '../../../services/userApi';
 import {
 	setFilterState,
 	setModalState,
@@ -62,12 +63,12 @@ const TableBrowse: React.FC = () => {
 			dispatch(setFilterState({ value: { [dataIndex]: value } }));
 		},
 		onSearch: (_props: OnSearchProps<UserType>) => {
-			refetch();
+			// refetch();
 		},
 		onReset: ({ dataIndex }: OnSearchProps<UserType>): void => {
 			dispatch(setFilterState({ value: { [dataIndex]: '' } }));
 			setTimeout(() => {
-				refetch();
+				// refetch();
 			}, 300);
 		},
 	};
@@ -166,22 +167,14 @@ const TableBrowse: React.FC = () => {
 		},
 	];
 
-	const { data, isLoading, refetch } = useQuery(
-		['user', page, pageSize, sorterState],
-		() => {
-			return getUser({ page, pageSize, filter: filterState, sort: sorterState });
-		},
-		{
-			onSuccess: (data) => {
-				dispatch(setPaginationState({ value: { total: data.paging.total } }));
-			},
-		}
-	);
+	const { data: users, isLoading, isSuccess } = useGetUsersQuery();
+
+	console.log('users : ', users);
 
 	return (
 		<>
 			<TableCustom
-				dataSource={data?.data.map((item, key) => ({ ...item, key }))}
+				dataSource={users?.data.map((item, key) => ({ ...item, key }))}
 				columns={columns}
 				onChange={handleTableChange}
 				pagination={{ ...userState.paginationState, total }}

@@ -1,23 +1,8 @@
 // import axios from 'axios';
+import { ResetPasswordRequest } from '../types/auth.type';
 import api from './api';
 
 // const api = axios.create({ baseURL: 'http://localhost:5000/api/' });
-
-type LoginRequest = {
-	email: string;
-	password: string;
-};
-
-type ResetPasswordRequest = {
-	token: string;
-	password: string;
-};
-
-type RegisterRequest = {
-	name: string;
-	email: string;
-	password: string;
-};
 
 export const register = async (request: RegisterRequest) => {
 	return await api.post('/auth/register', request);

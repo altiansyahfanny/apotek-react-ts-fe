@@ -15,6 +15,7 @@ import Verification from '../pages/auth/Verification';
 import ForgotPassword from '../pages/auth/ForgotPassword';
 import ResetPassword from '../pages/auth/ResetPassword';
 import Profile from '../pages/panel/Profile';
+import Setting from '../pages/panel/Setting';
 
 const Router = () => {
 	return (
@@ -34,6 +35,7 @@ const Router = () => {
 						<Route path="/product" element={<Product />} />
 						<Route path="/user" element={<User />} />
 						<Route path="/profile" element={<Profile />} />
+						<Route path="/setting" element={<Setting />} />
 					</Route>
 				</Route>
 			</Route>

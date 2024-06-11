@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import Router from './router';
 
 import 'react-toastify/dist/ReactToastify.css';
-import './App.css';
 
 const App: React.FC = () => {
 	return (

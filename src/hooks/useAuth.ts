@@ -19,7 +19,7 @@ const useAuth = () => {
 
 		isAdmin = user_role === 'Admin';
 
-		return { email, isAdmin, role: 'Admin' };
+		return { email, isAdmin, role: user_role };
 	}
 
 	return { email: '', isAdmin, role: '' };

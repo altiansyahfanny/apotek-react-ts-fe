@@ -1,22 +1,22 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { PaginationType } from '../../types/table.type';
-import { ProductType } from '../../types/product.types';
+import { ProductSearchType } from '../../types/product.type';
 import { SorterResult } from 'antd/es/table/interface';
 
 type ProductStateType = {
 	paginationState: PaginationType;
 	sorterState: object;
-	filterState: Record<keyof ProductType, string | number>;
+	filterState: Record<keyof ProductSearchType, string | number>;
 };
 
 const initialState: ProductStateType = {
 	paginationState: {
 		page: 1,
-		pageSize: 10,
-		total: 100,
+		pageSize: 1,
+		total: 1,
 	},
 	sorterState: {},
-	filterState: { age: '', name: '', date: '', hobbie: '' },
+	filterState: { stock: '', name: '', price: '' },
 };
 
 export const ProductSlice = createSlice({
@@ -28,13 +28,13 @@ export const ProductSlice = createSlice({
 		},
 		setSorterState: (
 			state,
-			action: PayloadAction<{ value: Partial<SorterResult<ProductType>> }>
+			action: PayloadAction<{ value: Partial<SorterResult<ProductSearchType>> }>
 		) => {
 			state.sorterState = { ...action.payload.value };
 		},
 		setFilterState: (
 			state,
-			action: PayloadAction<{ key: keyof ProductType; value: string | number }>
+			action: PayloadAction<{ key: keyof ProductSearchType; value: string | number }>
 		) => {
 			state.filterState = { ...state.filterState, [action.payload.key]: action.payload.value };
 		},

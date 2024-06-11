@@ -22,6 +22,11 @@ const items: MenuProps['items'] = [
 		icon: React.createElement(VideoCameraOutlined),
 		label: <Link to={'user'}>User</Link>,
 	},
+	{
+		key: 'setting',
+		icon: React.createElement(VideoCameraOutlined),
+		label: <Link to={'setting'}>Setting</Link>,
+	},
 ];
 
 const Sidebar = () => {

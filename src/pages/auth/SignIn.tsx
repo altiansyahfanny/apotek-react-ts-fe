@@ -1,41 +1,45 @@
 import { Button, Card, Flex, Form, Input, Space } from 'antd';
 import { FormProps } from 'antd/lib';
-import { AxiosError, AxiosResponse } from 'axios';
-import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../../api/authApi';
-import { showAxiosResponseErrorToast } from '../../helpers/Toast';
 import usePersist from '../../hooks/usePersist';
+import CenterLayout from '../../layouts/CenterLayout';
 import { LOGIN_SCHEMA } from '../../schema/auth-schema';
 import validate from '../../schema/validation';
+import { useLoginMutation } from '../../services/authApi';
 import { setAccessToken } from '../../store/features/authSlice';
 import { useAppDispatch } from '../../store/store';
-import CenterLayout from '../../layouts/CenterLayout';
 
 const SignIn = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const [persist, setPersist] = usePersist();
 
-	const { mutate, isLoading } = useMutation(login, {
-		onError: (e: AxiosError<ErrorResponse>) => {
-			showAxiosResponseErrorToast(e);
-		},
-		onSuccess: (data: AxiosResponse<LoginResponse>) => {
-			const { access_token } = data.data;
+	const [login, { isLoading, isError, error, isSuccess, data }] = useLoginMutation();
 
-			setPersist(true);
-			dispatch(setAccessToken({ value: access_token }));
-			navigate('/dashboard', { replace: true });
-		},
-	});
+	if (isError) {
+		console.log('SignIn -> error : ', error);
+	}
 
-	const onFinish: FormProps<LoginRequest>['onFinish'] = (values) => {
+	if (isSuccess) {
+		console.log('SignIn -> success : ', data?.access_token);
+	}
+
+	const onFinish: FormProps<LoginRequest>['onFinish'] = async (values) => {
 		const payload = {
 			email: values.email,
 			password: values.password,
 		};
-		mutate(payload);
+
+		try {
+			const { access_token } = await login(payload).unwrap();
+			setPersist(true);
+			dispatch(setAccessToken({ value: access_token }));
+			navigate('/dashboard', { replace: true });
+		} catch (err) {
+			console.log('SignIn -> onFinish -> error : ', err);
+		}
+
+		login(payload);
 	};
 
 	return (
@@ -45,7 +49,7 @@ const SignIn = () => {
 					name="login"
 					initialValues={{
 						remember: persist,
-						email: 'altiansyahfanny21@gmail.co',
+						email: 'altiansyahfanny21@gmail.com',
 						password: 'rahasia',
 					}}
 					onFinish={onFinish}

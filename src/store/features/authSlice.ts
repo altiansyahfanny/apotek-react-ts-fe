@@ -18,10 +18,13 @@ export const AuthSlice = createSlice({
 		setAccessToken: (state, action: PayloadAction<{ value: string | null }>) => {
 			state.accessToken = action.payload.value;
 		},
+		logOut: (state) => {
+			state.accessToken = null;
+		},
 	},
 });
 
 export default AuthSlice;
 
 // export const getAccessToken = (state) => state.auth.accessToken
-export const { setState, setAccessToken } = AuthSlice.actions;
+export const { setState, setAccessToken, logOut } = AuthSlice.actions;

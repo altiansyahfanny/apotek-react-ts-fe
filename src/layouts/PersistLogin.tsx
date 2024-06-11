@@ -1,41 +1,22 @@
 import Title from 'antd/lib/typography/Title';
 import { useEffect, useRef, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Link, Outlet } from 'react-router-dom';
-import { refreshToken } from '../api/authApi';
 import usePersist from '../hooks/usePersist';
-import { setAccessToken } from '../store/features/authSlice';
-import { useAppDispatch, useAppSelector } from '../store/store';
+import { useRefreshMutation } from '../services/authApi';
+import { useAppSelector } from '../store/store';
 import CenterLayout from './CenterLayout';
 
-type RefreshResponseType = { message: string; access_token: string };
-
-type ErrorType = {
-	message?: string;
-	status?: number;
-};
-
 const PersistLogin = () => {
-	const dispatch = useAppDispatch();
 	const [persist] = usePersist();
 	const token = useAppSelector((state) => state.auth.accessToken);
 	const effectRan = useRef(false);
 
 	const [trueSuccess, setTrueSuccess] = useState(false);
 
-	const { isLoading, isSuccess, isError, refetch, error } = useQuery(
-		'token',
-		() => refreshToken(),
-		{
-			onSuccess: (data) => {
-				const responseData: RefreshResponseType = data.data;
-				const { access_token } = responseData;
-				dispatch(setAccessToken({ value: access_token }));
-			},
-		}
-	);
+	//
+	const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] = useRefreshMutation();
 
-	const responseError = error as ErrorType;
+	console.log('PersistLogin -> error : ', error);
 
 	useEffect(() => {
 		if (effectRan.current === true) {
@@ -44,7 +25,7 @@ const PersistLogin = () => {
 			const verifyRefreshToken = async () => {
 				console.log('verifying refresh token');
 				try {
-					await refetch();
+					await refresh();
 					setTrueSuccess(true);
 				} catch (err) {
 					console.error(err);
@@ -76,10 +57,10 @@ const PersistLogin = () => {
 		);
 	} else if (isError) {
 		// persist: yes, token: no
-		console.error('error');
+		// console.log('error');
 		content = (
 			<CenterLayout>
-				{responseError?.message && <Title>{responseError.message}</Title>}
+				{/* <Title> {`${error?.data?.message} - `}</Title> */}
 				<Title level={5}>
 					<Link to="/sign-in"> Please login again</Link>
 				</Title>
@@ -89,10 +70,7 @@ const PersistLogin = () => {
 		// persist: yes, token: yes
 		// console.log('success');
 		content = <Outlet />;
-	} else if (
-		token
-		// && isUninitialized
-	) {
+	} else if (token && isUninitialized) {
 		// persist: yes, token: yes
 		// console.log('token and uninit');
 		content = <Outlet />;
